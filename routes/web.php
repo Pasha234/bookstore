@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Main;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,3 +20,13 @@ Route::get('/', [Main::class, 'show']);
 Route::get('/catalog', [Main::class, 'catalog']);
 
 Route::get('/product/{id}', [Main::class, 'product']);
+
+Route::get('/login', [UserController::class, 'login']);
+
+Route::get('/register', [UserController::class, 'register']);
+
+Route::get('/order', [UserController::class, 'order']);
+
+Route::get('/shoplist', [UserController::class, 'shoplist']);
+
+Route::get('/personal', [UserController::class, 'personal']);

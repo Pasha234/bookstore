@@ -8,10 +8,11 @@ use Orchid\Attachment\Attachable;
 use Orchid\Filters\Filterable;
 use Orchid\Screen\AsSource;
 
-
-class Offer_items extends Model
+class Order_item extends Model
 {
     use AsSource, Filterable, Attachable;
     use HasFactory;
-    protected $table = 'offer_items';
+
+    protected $table = 'order_items';
+    public $timestamps = false;
 }

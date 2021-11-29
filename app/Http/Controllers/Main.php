@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\Category;
 
 class Main extends Controller
 {
@@ -12,7 +13,9 @@ class Main extends Controller
     }
 
     public function catalog() {
-        return view('main.catalog');
+        return view('main.catalog', [
+            'categories' => Category::all()
+        ]);
     }
 
     public function offer() {
@@ -25,7 +28,8 @@ class Main extends Controller
 
     public function product($id) {
         return view('main.product', [
-            'product' => Product::findOrFail($id)
+            'product' => Product::findOrFail($id),
+            'feedbacks' => Feedback::where('item')
         ]);
     }
 
