@@ -1,5 +1,5 @@
 @include('parts.header')
-<div class="home__container">
+<div class="home__container" id="container">
   <div class="home__slider" id="slider">
     <div class="slider__img__container">
       <div class="slider__arrow__left" id="slider_arrow_left"></div>
@@ -52,47 +52,12 @@
       <span class="discount__title__text">Сейчас со скидкой</span>
     </div>
     <div class="discount__items">
-      <div class="items__card">
-        <div class="card__img"><img src="/staticfiles/img/LOTR.jpg" alt=""></div>
-        <div class="card__name"><span class="card__name__text">Властелин колец</span></div>
-        <div class="card__price"><div class="card__price__prev"><span class="price__prev__text">650 ₽</span></div><div class="card__price__actual"><span class="price__actual__text">450 ₽</span></div></div>
-        <div class="card__counter"><div class="card__counter__minus"><span class="counter__minus__text">-</span></div><div class="card__counter__number"><input type="text" maxlength="3" class="counter__number__input"></div><div class="card__counter__plus"><span class="counter__plus__text">+</span></div></div>
-      </div>
-      <div class="items__card">
-        <div class="card__img"><img src="/staticfiles/img/LOTR.jpg" alt=""></div>
-        <div class="card__name"><span class="card__name__text">Властелин колец</span></div>
-        <div class="card__price"><div class="card__price__prev"><span class="price__prev__text">650 ₽</span></div><div class="card__price__actual"><span class="price__actual__text">450 ₽</span></div></div>
-        <div class="card__counter"><div class="card__counter__minus"><span class="counter__minus__text">-</span></div><div class="card__counter__number"><input type="text" maxlength="3" class="counter__number__input"></div><div class="card__counter__plus"><span class="counter__plus__text">+</span></div></div>
-      </div>
-      <div class="items__card">
-        <div class="card__img"><img src="/staticfiles/img/LOTR.jpg" alt=""></div>
-        <div class="card__name"><span class="card__name__text">Властелин колец</span></div>
-        <div class="card__price"><div class="card__price__prev"><span class="price__prev__text">650 ₽</span></div><div class="card__price__actual"><span class="price__actual__text">450 ₽</span></div></div>
-        <div class="card__counter"><div class="card__counter__minus"><span class="counter__minus__text">-</span></div><div class="card__counter__number"><input type="text" maxlength="3" class="counter__number__input"></div><div class="card__counter__plus"><span class="counter__plus__text">+</span></div></div>
-      </div>
-      <div class="items__card">
-        <div class="card__img"><img src="/staticfiles/img/LOTR.jpg" alt=""></div>
-        <div class="card__name"><span class="card__name__text">Властелин колец</span></div>
-        <div class="card__price"><div class="card__price__prev"><span class="price__prev__text">650 ₽</span></div><div class="card__price__actual"><span class="price__actual__text">450 ₽</span></div></div>
-        <div class="card__counter"><div class="card__counter__minus"><span class="counter__minus__text">-</span></div><div class="card__counter__number"><input type="text" maxlength="3" class="counter__number__input"></div><div class="card__counter__plus"><span class="counter__plus__text">+</span></div></div>
-      </div>
-      <div class="items__card">
-        <div class="card__img"><img src="/staticfiles/img/LOTR.jpg" alt=""></div>
-        <div class="card__name"><span class="card__name__text">Властелин колец</span></div>
-        <div class="card__price"><div class="card__price__prev"><span class="price__prev__text">650 ₽</span></div><div class="card__price__actual"><span class="price__actual__text">450 ₽</span></div></div>
-        <div class="card__counter"><div class="card__counter__minus"><span class="counter__minus__text">-</span></div><div class="card__counter__number"><input type="text" maxlength="3" class="counter__number__input"></div><div class="card__counter__plus"><span class="counter__plus__text">+</span></div></div>
-      </div>
-      <div class="items__card">
-        <div class="card__img"><img src="/staticfiles/img/LOTR.jpg" alt=""></div>
-        <div class="card__name"><span class="card__name__text">Властелин колец</span></div>
-        <div class="card__price"><div class="card__price__prev"><span class="price__prev__text">650 ₽</span></div><div class="card__price__actual"><span class="price__actual__text">450 ₽</span></div></div>
-        <div class="card__counter"><div class="card__counter__minus"><span class="counter__minus__text">-</span></div><div class="card__counter__number"><input type="text" maxlength="3" class="counter__number__input"></div><div class="card__counter__plus"><span class="counter__plus__text">+</span></div></div>
-      </div>
-      <div class="items__card">
-        <div class="card__img"><img src="/staticfiles/img/LOTR.jpg" alt=""></div>
-        <div class="card__name"><span class="card__name__text">Властелин колец</span></div>
-        <div class="card__price"><div class="card__price__prev"><span class="price__prev__text">650 ₽</span></div><div class="card__price__actual"><span class="price__actual__text">450 ₽</span></div></div>
-        <div class="card__counter"><div class="card__counter__minus"><span class="counter__minus__text">-</span></div><div class="card__counter__number"><input type="text" maxlength="3" class="counter__number__input"></div><div class="card__counter__plus"><span class="counter__plus__text">+</span></div></div>
+      <div class="items__card" v-for="(item, index) in discountItems">
+        <div class="card__img"><a :href="'/product/' + item.id"><img :src="'/staticfiles/img/' + item.img" alt=""></a></div>
+        <div class="card__name"><a :href="'/product/' + item.id" class="card__name__text">@{{ item.name }}</a></div>
+        <div class="card__price"><div class="card__price__prev"><span class="price__prev__text">@{{ item.previous_price }} ₽</span></div><div class="card__price__actual"><span class="price__actual__text">@{{ item.price }} ₽</span></div></div>
+        <div v-if="item.quantity" class="card__counter" :data-id="item.shoplist_id" data-item_id="item.id"><div class="card__counter__minus" @click="decrementCounter(index)"><span class="counter__minus__text">-</span></div><div class="card__counter__number"><input type="text" @input="inputQuantity($event, index)" maxlength="3" :value="item.quantity" class="counter__number__input"></div><div class="card__counter__plus" @click="incrementCounter(index)"><span class="counter__plus__text">+</span></div></div>
+        <div v-else class="card__buy" @click="addInShoplist(index)" :data-id="item.id"><span class="card__buy__text">В корзину</span><div class="card__cart"></div></div>
       </div>
     </div>
   </div>
@@ -114,4 +79,5 @@
   </div>
 </div>
 <script src="/staticfiles/js/slider.js"></script>
+<script src="/staticfiles/js/home.js"></script>
 @include('parts.footer')

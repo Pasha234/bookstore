@@ -1,5 +1,5 @@
 @include('parts/header')
-<div class="product__container">
+<div class="product__container" id="container">
   <div class="product__main">
     <div class="main__img"><img src="/staticfiles/img/{{ $product->img }}" alt=""></div>
     <div class="main__about">
@@ -10,8 +10,8 @@
         <div class="main__price__prev"><span class="price__prev__text">{{ $product->previous_price }} ₽</span></div>
         @endif
       </div>
-      <!-- <div class="main__buy"><span class="main__buy__text">В корзину</span><div class="main__cart"></div></div> -->
-      <div class="main__counter"><div class="main__counter__minus"><span class="counter__minus__text">-</span></div><div class="main__counter__number"><input type="text" maxlength="3" class="counter__number__input"></div><div class="main__counter__plus"><span class="counter__plus__text">+</span></div></div>
+      <div class="main__counter" v-if="this.product.quantity"><div class="main__counter__minus" @click="decrementCounter(this.product)"><span class="counter__minus__text">-</span></div><div class="main__counter__number"><input type="text" maxlength="3" :value="product.quantity" @input="inputQuantity($event, this.product)" class="counter__number__input"></div><div class="main__counter__plus" @click="incrementCounter(this.product)"><span class="counter__plus__text">+</span></div></div>
+      <div class="main__buy" v-else @click="addInShoplist(this.product)"><span class="main__buy__text">В корзину</span><div class="main__cart"></div></div>
     </div>
   </div>
   @if ($product->year || $product->publisher || $product->cover || $product->author)
@@ -35,69 +35,53 @@
   @endif
   <div class="product__feedback">
     <div class="feedback__title"><span class="title__text">Отзывы</span></div>
+    @forelse($feedbacks as $feedback)
     <div class="feedback__card">
       <div class="card__title">
         <div class="card__title__user">
           <div class="user__img">
             <img src="/staticfiles/img/no-user-image-icon.jpg" alt="">
           </div>
-          <span class="user__name">Пользователь</span>
+          <span class="user__name">{{ $feedback->user_name }}</span>
         </div>
         <div class="card__title__grade">
-          <div class="grade__star active"></div>
-          <div class="grade__star active"></div>
-          <div class="grade__star active"></div>
-          <div class="grade__star active"></div>
-          <div class="grade__star"></div>
+          @for ($i = 1; $i <= 5; $i++)
+            @if($i <= $feedback->grade)
+            <div class="grade__star active"></div>
+            @else
+            <div class="grade__star"></div>
+            @endif
+          @endfor
         </div>
       </div>
       <div class="card__body">
-        <span class="body__text">Отличная книга. Классика своего времени. Всем рекомендую к прочтению! Но к издательству есть вопросы с качеством бумаги, ставлю 4.</span>
+        <span class="body__text">{{ $feedback->text }}</span>
       </div>
     </div>
-    <div class="feedback__card">
-      <div class="card__title">
-        <div class="card__title__user">
-          <div class="user__img">
-            <img src="/staticfiles/img/no-user-image-icon.jpg" alt="">
-          </div>
-          <span class="user__name">Пользователь</span>
-        </div>
-        <div class="card__title__grade">
-          <div class="grade__star active"></div>
-          <div class="grade__star active"></div>
-          <div class="grade__star active"></div>
-          <div class="grade__star active"></div>
-          <div class="grade__star active"></div>
-        </div>
-      </div>
-      <div class="card__body">
-        <span class="body__text">Пук-пук среньк</span>
-      </div>
-    </div>
+    @empty
+    <span>Отзывов нет. Станьте первыми!</span>
+    @endforelse
   </div>
   <div class="product__similiar">
     <div class="similiar__title"><span class="title__text">Похожие товары</span></div>
     <div class="similiar__items">
-      <div class="items__card">
-        <div class="card__img"><img src="/staticfiles/img/LOTR.jpg" alt=""></div>
-        <div class="card__name"><span class="card__name__text">Властелин колец</span></div>
-        <div class="card__price"><div class="card__price__prev"><span class="price__prev__text">650 ₽</span></div><div class="card__price__actual"><span class="price__actual__text">450 ₽</span></div></div>
-        <div class="card__buy"><span class="card__buy__text">В корзину</span><div class="card__cart"></div></div>
-      </div>
-      <div class="items__card">
-        <div class="card__img"><img src="/staticfiles/img/LOTR.jpg" alt=""></div>
-        <div class="card__name"><span class="card__name__text">Властелин колец</span></div>
-        <div class="card__price"><div class="card__price__prev"><span class="price__prev__text">650 ₽</span></div><div class="card__price__actual"><span class="price__actual__text">450 ₽</span></div></div>
-        <div class="card__buy"><span class="card__buy__text">В корзину</span><div class="card__cart"></div></div>
-      </div>
-      <div class="items__card">
-        <div class="card__img"><img src="/staticfiles/img/LOTR.jpg" alt=""></div>
-        <div class="card__name"><span class="card__name__text">Властелин колец</span></div>
-        <div class="card__price"><div class="card__price__prev"><span class="price__prev__text">650 ₽</span></div><div class="card__price__actual"><span class="price__actual__text">450 ₽</span></div></div>
-        <div class="card__buy"><span class="card__buy__text">В корзину</span><div class="card__cart"></div></div>
+      <span v-if="similiarItems.length == 0">Не удалось найти похожие товары</span>
+      <div class="items__card" v-for="(item, index) in similiarItems" :key="similiarItems">
+        <div class="card__img"><a :href="'/product/' + item.id"><img :src="'/staticfiles/img/' + item.img" alt=""></a></div>
+        <div class="card__name"><a :href="'/product/' + item.id" class="card__name__text">@{{ item.name }}</a></div>
+        <div class="card__price"><div class="card__price__prev" v-if="item.previous_price"><span class="price__prev__text">@{{ item.previous_price }} ₽</span></div><div class="card__price__actual"><span class="price__actual__text">@{{ item.price }} ₽</span></div></div>
+        <div v-if="item.quantity" class="card__counter" :data-id="item.shoplist_id" data-item_id="item.id"><div class="card__counter__minus" @click="decrementCounter(this.similiarItems[index])"><span class="counter__minus__text">-</span></div><div class="card__counter__number"><input type="text" @input="inputQuantity($event, this.similiarItems[index])" maxlength="3" :value="item.quantity" class="counter__number__input"></div><div class="card__counter__plus" @click="incrementCounter(this.similiarItems[index])"><span class="counter__plus__text">+</span></div></div>
+        <div v-else class="card__buy" @click="addInShoplist(this.similiarItems[index])" :data-id="item.id"><span class="card__buy__text">В корзину</span><div class="card__cart"></div></div>
       </div>
     </div>
   </div>
 </div>
+<script src="/staticfiles/js/product.js"></script>
+<script>
+  vm.$data.product = {
+    id: "{{ $product->id }}",
+    quantity: "{{ $product->quantity }}",
+    shoplist_id: "{{ $product['shoplist_id'] }}"
+  }
+</script>
 @include('parts/footer')

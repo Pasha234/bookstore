@@ -15,7 +15,7 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::get('/', [Main::class, 'show']);
+Route::get('/', [Main::class, 'main']);
 
 Route::get('/catalog', [Main::class, 'catalog']);
 
@@ -23,10 +23,32 @@ Route::get('/product/{id}', [Main::class, 'product']);
 
 Route::get('/login', [UserController::class, 'login']);
 
+Route::post('/login', [UserController::class, 'loginConfirm']);
+
 Route::get('/register', [UserController::class, 'register']);
+
+Route::post('/register', [UserController::class, 'registerConfirm']);
+
+Route::get('quit', [UserController::class, 'quit']);
 
 Route::get('/order', [UserController::class, 'order']);
 
 Route::get('/shoplist', [UserController::class, 'shoplist']);
 
 Route::get('/personal', [UserController::class, 'personal']);
+
+Route::get('/search', [Main::class, 'search']);
+
+Route::prefix('api')->group(function() {
+    Route::post('/shoplist/{id}/add', [UserController::class, 'addItemInShoplist']);
+
+    Route::post('/shoplist/{id}/change_quantity', [UserController::class, 'changeQuantity']);
+
+    Route::post('/shoplist/{id}/delete', [UserController::class, 'deleteItemFromShoplist']);
+
+    Route::get('/shoplist', [UserController::class, 'getShoplistItems']);
+
+    Route::get('/products/getDiscountProducts', [Main::class, 'getDiscountProducts']);
+
+    Route::get('/products/{id}/getSimiliarItems', [Main::class, 'getSimiliarItems']);
+});
