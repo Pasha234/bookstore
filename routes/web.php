@@ -41,6 +41,8 @@ Route::get('/{category}/search', [Main::class, 'search']);
 
 Route::get('/offer/{id}', [Main::class, 'offer']);
 
+Route::get('/order/{id}', [UserController::class, 'order']);
+
 Route::prefix('api')->group(function() {
     Route::post('/shoplist/{id}/add', [UserController::class, 'addItemInShoplist']);
 
@@ -59,4 +61,6 @@ Route::prefix('api')->group(function() {
     Route::get('/offer/{id}/items', [Main::class, 'getOfferItems']);
 
     Route::get('/{category}/search', [Main::class, 'getSearchedItems']);
+
+    Route::post('/personal/changeAvatar', [UserController::class, 'storeAvatar']);
 });

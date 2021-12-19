@@ -8,7 +8,8 @@ const app = Vue.createApp({
       searchedItems: [],
       minPrice: '',
       maxPrice: '',
-      searchWord: ''
+      searchWord: '',
+      errorHandler: '',
     }
   },
   created() {
@@ -44,7 +45,7 @@ const app = Vue.createApp({
       }
       fetch(`/api/${this.category}/search${getString}`)
         .then(response => response.json())
-        .then(result => this.searchedItems = result)
+        .then(result => result.error ? this.errorHandler = result.msg : this.searchedItems = result)
     },
 
     getDirections() {

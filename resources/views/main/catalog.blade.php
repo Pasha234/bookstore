@@ -5,10 +5,10 @@
     @foreach ($categories as $category)
       <div class="catalog__item">
         <div class="catalog__item__img">
-          <a href="/search?category={{ $category->link }}"><img src="/staticfiles/img/{{ $category->img }}" alt=""></a>
+          <a href="/{{ $category->link }}/search"><img src="/staticfiles/img/{{ $category->img }}" alt=""></a>
         </div>
         <div class="catalog__item__title">
-          <a href="/search?category={{ $category->link }}" class="title__text">{{ $category->name }}</a>
+          <a href="/{{ $category->link }}/search" class="title__text">{{ $category->name }}</a>
         </div>
       </div>
     @endforeach

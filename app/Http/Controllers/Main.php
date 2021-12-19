@@ -42,9 +42,16 @@ class Main extends Controller
     }
 
     public function catalog() {
-        return view('main.catalog', [
-            'categories' => Category::all()
-        ]);
+        if (Auth::check()) {
+            return view('main.catalog', [
+                'categories' => Category::all(),
+                'user' => Auth::user()
+            ]);
+        } else {
+            return view('main.catalog', [
+                'categories' => Category::all()
+            ]);
+        }
     }
 
     public function offer($id) {
@@ -61,10 +68,6 @@ class Main extends Controller
                 'offer' => $offer
             ]);
         }
-    }
-
-    public function compilation($id) {
-        return view('main.compilation');
     }
 
     public function product($id) {
@@ -109,16 +112,19 @@ class Main extends Controller
             ->where('categories.link', '=', $category)
             ->select('directions.*')
             ->get();
-
+        $categories = Category::all();
+        
         if (Auth::check()) {
             $user = Auth::user();
             return view('main.search', [
                 'directions' => $directions,
-                'user' => $user
+                'user' => $user,
+                'categories' => $categories
             ]);
         } else {
             return view('main.search', [
-                'directions' => $directions
+                'directions' => $directions,
+                'categories' => $categories
             ]);
         }
     }
@@ -272,7 +278,7 @@ class Main extends Controller
             }
             return response()->json($items);
         } else {
-            return response()->json(['msg' => 'No such category']);
+            return response()->json(['error' => true, 'msg' => 'No such category']);
         }
     }
 }

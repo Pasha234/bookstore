@@ -2,10 +2,14 @@
 <div class="personal__container" id="container">
   <div class="personal__card">
     <div class="card__info">
+      @if ($user->img)
+      <div class="card__img"><img id="avatar_personal" src="/storage/{{ $user->img }}" alt=""></div>
+      @else
       <div class="card__img"><img src="/staticfiles/img/no-user-image-icon.jpg" alt=""></div>
+      @endif
       <div class="card__name"><span class="card__name__text">{{ $user->name }}</span></div>
     </div>
-    <div class="personal__change"><span class="personal__change__text">Сменить аватар</span></div>
+    <div class="personal__change" @click="showAvatarForm()"><span class="personal__change__text">Сменить аватар</span><input v-if="change_avatar" @change="changeAvatar" accept="image/*" type="file" /></div>
   </div>
   <div class="personal__quit"><a href="/quit" class="quit__text">Выйти</a></div>
   <div class="personal__orders">

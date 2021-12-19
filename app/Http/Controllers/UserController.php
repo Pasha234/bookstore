@@ -9,12 +9,18 @@ use App\Models\User;
 use App\Models\Shoplist;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\Order_item;
 use Illuminate\Support\Facades\DB;
+use Intervention\Image\ImageManagerStatic as Image;
+use Illuminate\Support\Facades\Storage;
+
+// require "../vendor/autoload.php";
 
 class UserController extends Controller
 {
     public function personal() {
         if (Auth::check()){
+            $user = Auth::user();
             return view('user.personal',[
                 'user' => Auth::user()
             ]);
@@ -39,8 +45,28 @@ class UserController extends Controller
         }
     }
 
-    public function order() {
-        return view('user.order');
+    public function order($id) {
+        $order = Order::find($id);
+
+        $order_items = Order_item::where('order_items.order_id', $id)
+        ->join('products', 'order_items.product_id', 'products.id')
+        ->select('products.*',
+        'order_items.quantity')
+        ->get();
+
+        if (Auth::check()) {
+            return view('user.order', [
+                'order' => $order,
+                'order_items' => $order_items,
+                'user' => Auth::user()
+            ]);
+        } else {
+            return view('user.order', [
+                'order' => $order,
+                'order_items' => $order_items
+            ]);
+        }
+        
     }
 
     public function shoplist() {
@@ -190,5 +216,30 @@ class UserController extends Controller
             return json_encode($orders);
         }
         return json_encode(['success' => false]);
+    }
+
+    public function storeAvatar(Request $request) {
+        if (!Auth::check()) {
+            return response()->json(['success' => false]);
+        }
+        if ($request->file('avatar')->isValid()) {
+            $imgName = uniqid() . '.jpg';
+            $path = $request->file('avatar')->storeAs('public', $imgName);
+            $pathToImg = $_SERVER['DOCUMENT_ROOT'] . '/../storage/app/' . $path;
+            $image = Image::make($pathToImg);
+            if ($image->height() > $image->width()) {
+                $image->widen(300);
+            } else {
+                $image->heighten(300);
+            }
+            $image->crop(300, 300)->save();
+            $user = Auth::user();
+            if ($user->img) {
+                Storage::disk('public')->delete($user->img);
+            }
+            $user->img = $imgName;
+            $user->save();
+            return response()->json(['success' => true, 'img' => $imgName]);
+        }
     }
 }

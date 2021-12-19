@@ -8,6 +8,7 @@ use Orchid\Screen\Sight;
 use App\Models\Order;
 use App\Models\Product;
 use Orchid\Screen\Fields\Relation;
+use Orchid\Screen\Fields\Input;
 use Illuminate\Database\Eloquent\Model;
 
 class OrderItemsResource extends Resource
@@ -33,7 +34,12 @@ class OrderItemsResource extends Resource
 
             Relation::make('product_id')
                 ->fromModel(Product::class, 'name', 'id')
-                ->title('Product ID')
+                ->title('Product ID'),
+
+            Input::make('quantity')
+                ->title('Quantity')
+                ->placeholder('Enter the quantity')
+                ->required()
         ];
     }
 
@@ -50,6 +56,8 @@ class OrderItemsResource extends Resource
             TD::make('order_id'),
 
             TD::make('product_id'),
+
+            TD::make('quantity')
         ];
     }
 
@@ -63,7 +71,8 @@ class OrderItemsResource extends Resource
         return [
             Sight::make('id'),
             Sight::make('order_id', 'Order ID'),
-            Sight::make('product_id', 'Product ID')
+            Sight::make('product_id', 'Product ID'),
+            Sight::make('quantity', 'Quantity')
         ];
     }
 
@@ -86,7 +95,8 @@ class OrderItemsResource extends Resource
     {
         return [
             'order_id' => 'required|integer',
-            'product_id' => 'required|integer'
+            'product_id' => 'required|integer',
+            'quantity' => 'required|integer'
         ];
     }
 }

@@ -20,9 +20,10 @@
   </div>
   <div class="search__results">
     <div class="results__container">
+      <span v-if="errorHandler">@{{ errorHandler }}</span>
       <div class="results__card" v-for="(item, index) in searchedItems">
-        <div class="card__img"><img :src="'/staticfiles/img/' + item.img" alt=""></div>
-        <div class="card__name"><span class="card__name__text">@{{ item.name }}</span></div>
+        <div class="card__img"><a :href="'/product/' + item.id"><img :src="'/staticfiles/img/' + item.img" alt=""></a></div>
+        <div class="card__name"><a :href="'/product/' + item.id" class="card__name__text">@{{ item.name }}</a></div>
         <div class="card__price"><div class="card__price__prev" v-if="item.previous_price"><span class="price__prev__text">@{{ item.previous_price }} ₽</span></div><div class="card__price__actual"><span class="price__actual__text">@{{ item.price }} ₽</span></div></div>
         <div v-if="item.quantity" class="card__counter" :data-id="item.shoplist_id" data-item_id="item.id"><div class="card__counter__minus" @click="decrementCounter(item)"><span class="counter__minus__text">-</span></div><div class="card__counter__number"><input type="text" @input="inputQuantity($event, item)" maxlength="3" :value="item.quantity" class="counter__number__input"></div><div class="card__counter__plus" @click="incrementCounter(item)"><span class="counter__plus__text">+</span></div></div>
         <div v-else class="card__buy" @click="addInShoplist(item)" :data-id="item.id"><span class="card__buy__text">В корзину</span><div class="card__cart"></div></div>
@@ -35,12 +36,9 @@
     </div>
     <div class="categories__list">
       <ul>
-        <li><a href="/audiobooks/search">Аудиокниги</a></li>
-        <li><a href="">Электронные книги</a></li>
-        <li><a href="">Художественная литература</a></li>
-        <li><a href="">Нехудожественная литература</a></li>
-        <li><a href="">Открытки</a></li>
-        <li><a href="">Канцтовары</a></li>
+        @foreach($categories as $category)
+        <li><a href="/{{ $category->link }}/search">{{ $category->name }}</a></li>
+        @endforeach
       </ul>
     </div>
   </div>

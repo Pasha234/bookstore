@@ -37,34 +37,34 @@
     <div class="categories__container__text"><span class="text" id="categoriesText">Категории</span></div>
     <div class="categories__card">
       <div class="card__img">
-        <a href=""><img src="/staticfiles/img/LOTR.jpg" alt=""></a>
+        <a href="/fiction/search"><img src="/staticfiles/img/LOTR.jpg" alt=""></a>
       </div>
       <div class="card__container__text">
-        <a href="/"><span class="card__text">Художественная литература</span></a>
+        <a href="/fiction/search"><span class="card__text">Художественная литература</span></a>
       </div>
     </div>
     <div class="categories__card">
       <div class="card__img">
-        <a href=""><img src="/staticfiles/img/economic.jpg" alt=""></a>
+        <a href="/nonfiction/search"><img src="/staticfiles/img/economic.jpg" alt=""></a>
       </div>
       <div class="card__container__text">
-        <a href=""><span class="card__text">Нехудожественная литература</span></a>
+        <a href="/nonfiction/search"><span class="card__text">Нехудожественная литература</span></a>
       </div>
     </div>
     <div class="categories__card">
       <div class="card__img">
-        <a href=""><img src="/staticfiles/img/elec_book.jpg" alt=""></a>
+        <a href="/elecbooks/search"><img src="/staticfiles/img/elec_book.jpg" alt=""></a>
       </div>
       <div class="card__container__text">
-        <a href=""><span class="card__text">Электронные книги</span></a>
+        <a href="/elecbooks/search"><span class="card__text">Электронные книги</span></a>
       </div>
     </div>
     <div class="categories__card">
       <div class="card__img">
-        <a href=""><img src="/staticfiles/img/audiobook.jpg" alt=""></a>
+        <a href="/audiobooks/search"><img src="/staticfiles/img/audiobook.jpg" alt=""></a>
       </div>
       <div class="card__container__text">
-        <a href=""><span class="card__text">Аудиокниги</span></a>
+        <a href="/audiobooks/search"><span class="card__text">Аудиокниги</span></a>
       </div>
     </div>
   </div>
