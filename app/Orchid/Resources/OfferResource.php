@@ -47,7 +47,17 @@ class OfferResource extends Resource
             CheckBox::make('is_compilation')
                 ->sendTrueOrFalse()
                 ->title('Compilation')
-                ->help('The offer is a compilation')
+                ->help('The offer is a compilation'),
+
+            CheckBox::make('on_homepage')
+                ->sendTrueOrFalse()
+                ->title('On home page')
+                ->help('The offer must be on home page'),
+
+            Input::make('slider_num')
+                ->title('Number in the slider')
+                ->help('Enter the place which the offer will be occupy in the slider in a number')
+                ->placeholder('Enter the number in the slider (not required)')
         ];
     }
 
@@ -63,17 +73,17 @@ class OfferResource extends Resource
 
             TD::make('title'),
 
-            TD::make('is_compilation', 'Is Compilation'),
+            TD::make('on_homepage', 'Is on home page'),
 
             TD::make('created_at', 'Date of creation')
                 ->render(function ($model) {
                     return $model->created_at->toDateTimeString();
                 }),
 
-            TD::make('updated_at', 'Update date')
-                ->render(function ($model) {
-                    return $model->updated_at->toDateTimeString();
-                }),
+            // TD::make('updated_at', 'Update date')
+            //     ->render(function ($model) {
+            //         return $model->updated_at->toDateTimeString();
+            //     }),
         ];
     }
 
@@ -90,6 +100,8 @@ class OfferResource extends Resource
             Sight::make('description'),
             Sight::make('img'),
             Sight::make('is_compilation', 'Is Compilation'),
+            Sight::make('slider_num', 'Number in the slider'),
+            Sight::make('on_homepage', 'Is on home page'),
             Sight::make('created_at')
                 ->render(function ($model) {
                     return $model->created_at->toDateTimeString();
@@ -122,7 +134,9 @@ class OfferResource extends Resource
             'title' => 'required|string|max:32',
             'description' => 'required|string|max:150',
             'img' => 'required|string|max:32',
-            'is_compilation' => 'boolean'
+            'is_compilation' => 'boolean',
+            'slider_num' => 'integer',
+            'on_homepage' => 'boolean'
         ];
     }
 }

@@ -10,8 +10,12 @@
       <div class="register__field"><input type="password" class="field__input" placeholder="Пароль" name="password"></div>
       <div class="register__submit"><input type="submit" class="submit__input" value="Зарегистрироваться"></div>
       <div class="register__google"><img src="/staticfiles/img/google.png" alt=""><span class="google__text">Зарегистрироваться с Google</span></div>
-      @if(isset($errors))
-      <span>{{ var_dump($errors) }}</span>
+      @if ($errors->any())
+      <ul>
+      @foreach($errors->all() as $message)
+      <li><h3>{{ $message }}</h3></li>
+      @endforeach
+      </ul>
       @endif
     </div>
   </form>

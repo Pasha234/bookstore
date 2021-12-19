@@ -8,8 +8,12 @@
       <div class="login__field"><input type="password" class="field__input" placeholder="Пароль" name="password"></div>
       <div class="login__submit"><input type="submit" class="submit__input" value="Войти"><div class="submit__register"><a href="/register" class="register__text">Зарегистрироваться</a></div></div>
       <div class="login__google"><img src="/staticfiles/img/google.png" alt=""><span class="google__text">Войти с Google</span></div>
-      @if (isset($errors))
-      <span>{{ var_dump($errors) }}</span>
+      @if ($errors->any())
+      <ul>
+      @foreach($errors->all() as $message)
+      <li><h3>{{ $message }}</h3></li>
+      @endforeach
+      </ul>
       @endif
     </div>
   </form>

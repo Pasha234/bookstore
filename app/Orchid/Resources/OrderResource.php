@@ -5,9 +5,11 @@ namespace App\Orchid\Resources;
 use Orchid\Crud\Resource;
 use Orchid\Screen\TD;
 use Orchid\Screen\Fields\Input;
+use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Fields\DateTimer;
 use Orchid\Screen\Sight;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 
 class OrderResource extends Resource
 {
@@ -26,6 +28,12 @@ class OrderResource extends Resource
     public function fields(): array
     {
         return [
+            Relation::make('user_id')
+                ->title('User ID')
+                ->placeholder('Select user\'s name')
+                ->fromModel(User::class, 'name', 'id')
+                ->required(),
+
             Input::make('recipient')
                 ->title('Recipient')
                 ->placeholder('Enter the name of the recipient')
@@ -57,6 +65,8 @@ class OrderResource extends Resource
         return [
             TD::make('id'),
 
+            TD::make('user_id'),
+
             TD::make('created_at', 'Date of creation')
                 ->render(function ($model) {
                     return $model->created_at->toDateTimeString();
@@ -78,6 +88,7 @@ class OrderResource extends Resource
     {
         return [
             Sight::make('id'),
+            Sight::make('user_id'),
             Sight::make('recipient'),
             Sight::make('address'),
             Sight::make('indicativeDeliveryDate', 'Indicative Delivery Date'),
@@ -114,7 +125,8 @@ class OrderResource extends Resource
             'recipient' => 'required|string|max:32',
             'address' => 'required|string|max:32',
             'indicativeDeliveryDate' => 'required|date',
-            'sum' => 'required|numeric|max:99999'
+            'sum' => 'required|numeric|max:99999',
+            'user_id' => 'required|integer'
         ];
     }
 }

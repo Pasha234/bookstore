@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Shoplist;
 use App\Models\Product;
+use App\Models\Order;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -180,5 +181,14 @@ class UserController extends Controller
         return back()->withErrors([
             'email' => 'The provided email is occupied'
         ]);
+    }
+
+    public function getUserOrders() {
+        if (Auth::check()) {
+            $orders = Order::where('user_id', Auth::id())
+                ->get();
+            return json_encode($orders);
+        }
+        return json_encode(['success' => false]);
     }
 }

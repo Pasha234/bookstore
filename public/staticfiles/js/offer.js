@@ -1,73 +1,21 @@
 const app = Vue.createApp({
   data() {
     return {
-      searchItems: [],
+      similiarItems: [],
       loading: false,
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-      category: window.location.pathname.match(/^\/([^\/]*)/m)[1],
-      searchedItems: [],
-      minPrice: '',
-      maxPrice: '',
-      searchWord: ''
+      offer_id: window.location.pathname.match(/\/(\d+)$/m)[1],
+      offerItems: {}
     }
   },
   created() {
-    let uri = window.location.href.split('?');
-    let getVars = []
-    if(uri.length == 2) {
-      let vars = uri[1].split('&');
-      getVars = [];
-      vars.forEach(function(v) {
-        getVars.push(v)
-      });
-    }
-    getVars.forEach(value => {
-      let vars = value.split('=')
-      if (vars[0] == 'min_price') {
-        this.minPrice = vars[1]
-      }
-      if (vars[0] == 'max_price') {
-        this.maxPrice = vars[1]
-      }
-      if (vars[0] == 'search_word') {
-        this.searchWord = decodeURI(vars[1])
-      }
-    })
-    if (getVars)
-    this.fetchSearchedItems(getVars)
+    this.fetchSimiliarItems()
   },
   methods: {
-    fetchSearchedItems(getVars) {
-      let getString = ''
-      if (getVars.length > 0) {
-        getString = '?' + getVars.join('&')
-      }
-      fetch(`/api/${this.category}/search${getString}`)
+    fetchSimiliarItems() {
+      fetch(`/api/offer/${this.offer_id}/items`)
         .then(response => response.json())
-        .then(result => this.searchedItems = result)
-    },
-
-    getDirections() {
-      return Array.from(document.querySelectorAll('#direction_fields .direction__field input')).filter(value => value.checked).map(input => input.value).join(',')
-    },
-
-    doSearch() {
-      let getVars = []
-      let directions = this.getDirections()
-      if (directions) {
-        getVars.push(`directions=` + directions)
-      }
-      if (this.minPrice.replace(' ', '')) {
-        getVars.push('min_price=' + this.minPrice)
-      }
-      if (this.maxPrice.replace(' ', '')) {
-        getVars.push('max_price=' + this.maxPrice)
-      }
-      if (this.searchWord.replace(' ', '')) {
-        getVars.push('search_word=' + this.searchWord)
-      }
-      history.pushState(null, null, '?' + getVars.join('&'))
-      this.fetchSearchedItems(getVars)
+        .then(result => this.offerItems = result)
     },
 
     addInShoplist(item) {

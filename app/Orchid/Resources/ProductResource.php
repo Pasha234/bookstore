@@ -9,6 +9,7 @@ use Orchid\Screen\Fields\Relation;
 use Orchid\Screen\Sight;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Category;
+use App\Models\Direction;
 
 class ProductResource extends Resource
 {
@@ -67,6 +68,12 @@ class ProductResource extends Resource
             Input::make('year')
                 ->title('Year')
                 ->placeholder('Enter the year of publishing (if exists)'),
+
+            Relation::make('direction')
+                ->title('Direction')
+                ->placeholder('Select a direction')
+                ->fromModel(Direction::class, 'name', 'id')
+                ->required(),
         ];
     }
 
@@ -112,7 +119,8 @@ class ProductResource extends Resource
             Sight::make('author'),
             Sight::make('cover'),
             Sight::make('year'),
-            Sight::make('updated_at')
+            Sight::make('direction'),
+            Sight::make('created_at')
                 ->render(function ($model) {
                     return $model->created_at->toDateTimeString();
                 }),
@@ -150,6 +158,7 @@ class ProductResource extends Resource
             'author' => 'string|max:32|nullable',
             'cover' => 'string|max:32|nullable',
             'year' => 'integer|nullable',
+            'direction' => 'integer|required'
         ];
     }
 }

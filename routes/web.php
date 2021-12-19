@@ -29,7 +29,7 @@ Route::get('/register', [UserController::class, 'register']);
 
 Route::post('/register', [UserController::class, 'registerConfirm']);
 
-Route::get('quit', [UserController::class, 'quit']);
+Route::get('/quit', [UserController::class, 'quit']);
 
 Route::get('/order', [UserController::class, 'order']);
 
@@ -37,7 +37,9 @@ Route::get('/shoplist', [UserController::class, 'shoplist']);
 
 Route::get('/personal', [UserController::class, 'personal']);
 
-Route::get('/search', [Main::class, 'search']);
+Route::get('/{category}/search', [Main::class, 'search']);
+
+Route::get('/offer/{id}', [Main::class, 'offer']);
 
 Route::prefix('api')->group(function() {
     Route::post('/shoplist/{id}/add', [UserController::class, 'addItemInShoplist']);
@@ -51,4 +53,10 @@ Route::prefix('api')->group(function() {
     Route::get('/products/getDiscountProducts', [Main::class, 'getDiscountProducts']);
 
     Route::get('/products/{id}/getSimiliarItems', [Main::class, 'getSimiliarItems']);
+
+    Route::get('/orders', [UserController::class, 'getUserOrders']);
+
+    Route::get('/offer/{id}/items', [Main::class, 'getOfferItems']);
+
+    Route::get('/{category}/search', [Main::class, 'getSearchedItems']);
 });
