@@ -5,7 +5,9 @@ const app = Vue.createApp({
       loading: false,
       csrf: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
       product_id: window.location.pathname.match(/\/(\d+)$/m)[1],
-      product: {}
+      product: {},
+      feedback_form_text: '',
+      feedback_form_grade: 0,
     }
   },
   created() {
@@ -17,7 +19,6 @@ const app = Vue.createApp({
         .then(response => response.json())
         .then(result => this.similiarItems = result)
     },
-
     addInShoplist(item) {
       if (!this.loading) {
         this.loading = true
@@ -117,7 +118,6 @@ const app = Vue.createApp({
         }
       }
     },
-
     deleteItem(item) {
       if (!this.loading) {
         this.loading = true
@@ -138,6 +138,15 @@ const app = Vue.createApp({
             this.loading = false
           })
       }
+    },
+    addFeedback() {
+      let formData = new FormData()
+          formData.append('quantity', item.quantity + 1)
+          formData.append('_token', this.csrf)
+          fetch(`/api/shoplist/${item.shoplist_id}/change_quantity`, {
+            method: 'POST',
+            body: formData
+          })
     }
   }
 })

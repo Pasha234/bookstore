@@ -12,9 +12,9 @@ use App\Models\Order;
 use App\Models\Order_item;
 use Illuminate\Support\Facades\DB;
 use Intervention\Image\ImageManagerStatic as Image;
+use Google\Client;
+use Google\Service\Oauth2;
 use Illuminate\Support\Facades\Storage;
-
-// require "../vendor/autoload.php";
 
 class UserController extends Controller
 {
@@ -29,19 +29,97 @@ class UserController extends Controller
         }
     }
 
-    public function login() {
+    public function login(Request $request) {
         if (Auth::check()) {
             return redirect('/personal');
         } else {
-            return view('user.login');
+            $redirect_uri = 'http://test.site/login';
+            $client_id = config('login.clientId');
+            $client_secret = config('login.clientSecret');
+            $client = new Client();
+            $client->setClientId($client_id);
+            $client->setClientSecret($client_secret);
+            $client->setRedirectUri($redirect_uri);
+            $client->setScopes('profile');
+            $client->setScopes('email');
+            if (isset($_GET['code'])) {
+                $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+                $client->setAccessToken($token);
+                $auth = new Oauth2($client);
+                $google_info = $auth->userinfo->get();
+                $email = $google_info->email;
+                $name = $google_info->name;
+                $user = User::where('email', $email)
+                    ->where('from_google', true)
+                    ->first();
+
+                if ($user) {
+                    Auth::loginUsingId($user->id);
+                    $request->session()->regenerate();
+        
+                    return redirect('/personal');
+                }
+                $request->session()->forget('id_token_token');
+                return redirect('/login')->withErrors([
+                    'email' => 'The provided credentials do not match our records'
+                ]);
+                print_r($google_info);
+                return "Здарова, $name, с e-mail: $email";
+            } else {
+                return view('user.login', [
+                    'google_link' => $client->createAuthUrl()
+                ]);
+            }
         }
     }
 
-    public function register() {
+    public function register(Request $request) {
         if (Auth::check()) {
             return redirect('/personal');
         } else {
-            return view('user.register');
+            $redirect_uri = 'http://test.site/register';
+            $client_id = config('login.clientId');
+            $client_secret = config('login.clientSecret');
+            $client = new Client();
+            $client->setClientId($client_id);
+            $client->setClientSecret($client_secret);
+            $client->setRedirectUri($redirect_uri);
+            $client->setScopes('profile');
+            $client->setScopes('email');
+            if (isset($_GET['code'])) {
+                $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+                $client->setAccessToken($token);
+                $auth = new Oauth2($client);
+                $google_info = $auth->userinfo->get();
+                $email = $google_info->email;
+                $name = $google_info->name;
+                $user = User::where('email', $email)
+                    ->first();
+
+                if ($user) {
+                    if ($user['from_google'] == false) {
+                        return redirect('/register')->withErrors([
+                            'email' => 'The provided email is occupied'
+                        ]);
+                    }
+                    Auth::loginUsingId($user->id);
+                    $request->session()->regenerate();
+        
+                    return redirect('/personal');
+                } else {
+                    $request->session()->push('email', $email);
+                    $request->session()->push('from_google', true);
+                    return redirect('/register/from_google');
+                }
+                $request->session()->forget('id_token_token');
+                return redirect('/login')->withErrors([
+                    'email' => 'The provided credentials do not match our records'
+                ]);
+            } else {
+                return view('user.register', [
+                    'google_link' => $client->createAuthUrl()
+                ]);
+            }
         }
     }
 
@@ -158,6 +236,8 @@ class UserController extends Controller
     public function quit(Request $request) {
         Auth::logout();
 
+        $request->session()->forget('id_token_token');
+
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
@@ -241,5 +321,65 @@ class UserController extends Controller
             $user->save();
             return response()->json(['success' => true, 'img' => $imgName]);
         }
+    }
+
+    public function registerFromGoogle(Request $request) {
+        if (Auth::check()) {
+            return redirect('/personal');
+        } else {
+            if ($request->session()->has('email') && $request->session()->has('from_google')) {
+                if ($request->session()->get('from_google') == true){
+                    return view('user.googleRegister');
+                }
+            }
+        }
+        return redirect('/home');
+    }
+
+    public function registerFromGoogleConfirm(Request $request) {
+        $credentials = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:100']
+        ]);
+        if (!$request->session()->has('email') || !$request->session()->has('from_google')) {
+            return redirect('/home');
+        }
+        if ($request->session()->get('from_google') != true){
+            return redirect('/home');
+        }
+
+        if (!User::where('email', $request->email)->exists()) {
+            $new_user = new User;
+            $new_user->name = $request->name;
+            $new_user->last_name = $request->last_name;
+            $new_user->email = $request->session()->get('email');
+            $new_user->password = null;
+            $new_user['from_google'] = true;
+            $new_user->save();
+            $request->session()->forget(['email', 'from_google']);
+            if (Auth::attempt($credentials)) {
+                $request->session()->regenerate();
+    
+                return redirect('/personal');
+            }
+        }
+        return back()->withErrors([
+            'email' => 'The provided email is occupied'
+        ]);
+    }
+
+    public function addFeedback(Request $request) {
+        if (Auth::check()) {
+        $credentials = $request->validate([
+            'user_id' => ['required', 'integer'],
+            'product_id' => ['required', 'integer'],
+            'grade' => ['required', 'integer', 'max:5', 'min:1'],
+            'text' => ['string', 'max:400']
+        ]);
+        return $credentials;
+        } else {
+            return response()->json(['success' => 0]);
+        }
+        
     }
 }

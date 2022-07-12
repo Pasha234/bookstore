@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Orchid\Platform\Models\User as Authenticatable;
+// use Illuminate\Foundation\Auth\User as Authenticatable;
+// use Illuminate\Contracts\Auth\Authenticatable;
 
 class User extends Authenticatable
 {

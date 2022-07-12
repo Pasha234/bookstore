@@ -35,6 +35,17 @@
   @endif
   <div class="product__feedback">
     <div class="feedback__title"><span class="title__text">Отзывы</span></div>
+    <div class="feedback__form">
+      <div class="form__add">Оставить отзыв</div>
+      <div class="form__body" style="display: block">
+        <div class="form__grade">
+            <div class="grade__star active" v-for="n in this.feedback_form_grade"></div>
+            <div class="grade__star" v-for="n in 5 - this.feedback_form_grade"></div>
+          </div>
+        <div class="form__text"><textarea v-model="feedback_form_text" id="feedback_form_text" cols="30" rows="10"></textarea></div>
+        <div class="form__submit"><button>Отправить</button></div>
+      </div>
+    </div>
     @forelse($feedbacks as $feedback)
     <div class="feedback__card">
       <div class="card__title">
