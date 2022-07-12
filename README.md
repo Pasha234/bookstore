@@ -1,4 +1,4 @@
-<p align="center">BookStore</p>
+# BookStore
 ## **English**
 Bookstore is a site made fully on Laravel framework and Vue. The site itself is a imitation of book selling online store. It has user authorizing function, where users can set their nickname and avatar. Users can select the goods and add it to the shopcart. Also users can authorize either using their login and password or with google account. The site also has an admin panel, where administrator can manipulate the content of the site.
 Tech Stack: Laravel, Vue, MySQL, 
