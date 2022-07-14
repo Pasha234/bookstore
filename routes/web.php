@@ -45,6 +45,8 @@ Route::get('/order/{id}', [UserController::class, 'order']);
 
 Route::get('/register/from_google', [UserController::class, 'registerFromGoogle']);
 
+Route::post('/register/from_google', [UserController::class, 'registerFromGoogleConfirm']);
+
 Route::prefix('api')->group(function() {
     Route::post('/shoplist/{id}/add', [UserController::class, 'addItemInShoplist']);
 
