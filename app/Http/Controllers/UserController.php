@@ -33,7 +33,7 @@ class UserController extends Controller
         if (Auth::check()) {
             return redirect('/personal');
         } else {
-            $redirect_uri = 'https://bookstore-online-rus.herokuapp.com/login';
+            $redirect_uri = url()->current();
             $client_id = config('login.clientId');
             $client_secret = config('login.clientSecret');
             $client = new Client();
@@ -77,7 +77,7 @@ class UserController extends Controller
         if (Auth::check()) {
             return redirect('/personal');
         } else {
-            $redirect_uri = 'https://bookstore-online-rus.herokuapp.com/register';
+            $redirect_uri = url()->current();
             $client_id = config('login.clientId');
             $client_secret = config('login.clientSecret');
             $client = new Client();
