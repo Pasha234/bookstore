@@ -14,7 +14,7 @@ class AddFromGoogleInUsers extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->boolean('from_google');
+            $table->boolean('from_google')->nullable();
         });
     }
 
