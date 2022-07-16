@@ -357,11 +357,10 @@ class UserController extends Controller
             $new_user['from_google'] = true;
             $new_user->save();
             $request->session()->forget(['email', 'from_google']);
-            if (Auth::attempt($credentials)) {
-                $request->session()->regenerate();
-    
-                return redirect('/personal');
-            }
+            
+            Auth::login($new_user);
+            $request->session()->regenerate();
+            return redirect('/personal');
         }
         return back()->withErrors([
             'email' => 'The provided email is occupied'
