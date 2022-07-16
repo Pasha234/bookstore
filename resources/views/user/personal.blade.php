@@ -3,7 +3,7 @@
   <div class="personal__card">
     <div class="card__info">
       @if ($user->img)
-      <div class="card__img"><img id="avatar_personal" src="/storage/{{ $user->img }}" alt=""></div>
+      <div class="card__img"><img id="avatar_personal" src="{{ $user->img }}" alt=""></div>
       @else
       <div class="card__img"><img src="/staticfiles/img/no-user-image-icon.jpg" alt=""></div>
       @endif

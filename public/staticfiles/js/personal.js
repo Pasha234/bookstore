@@ -28,8 +28,8 @@ const app = Vue.createApp({
         .then(response => response.json())
         .then(result => {
           if (result.success) {
-            document.getElementById('avatar_sidebar').setAttribute('src', "/storage/" + result.img)
-            document.getElementById('avatar_personal').setAttribute('src', "/storage/" + result.img)
+            document.getElementById('avatar_sidebar').setAttribute('src', result.img)
+            document.getElementById('avatar_personal').setAttribute('src', result.img)
           }
         })
     },

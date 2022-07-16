@@ -28,7 +28,7 @@
   <div class="navbar__user">
     <div class="user__img">
       @if ($user->img)
-      <a href="/personal"><img id="avatar_sidebar" src="/storage/{{ $user->img }}" alt=""></a>
+      <a href="/personal"><img id="avatar_sidebar" src="{{ $user->img }}" alt=""></a>
       @else
       <a href="/personal"><img src="/staticfiles/img/no-user-image-icon.jpg" alt=""></a>
       @endif

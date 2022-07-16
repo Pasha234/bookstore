@@ -15,6 +15,7 @@ use Intervention\Image\ImageManagerStatic as Image;
 use Google\Client;
 use Google\Service\Oauth2;
 use Illuminate\Support\Facades\Storage;
+use Cloudinary;
 
 class UserController extends Controller
 {
@@ -303,23 +304,29 @@ class UserController extends Controller
             return response()->json(['success' => false]);
         }
         if ($request->file('avatar')->isValid()) {
-            $imgName = uniqid() . '.jpg';
-            $path = $request->file('avatar')->storeAs('public', $imgName);
-            $pathToImg = $_SERVER['DOCUMENT_ROOT'] . '/../storage/app/' . $path;
-            $image = Image::make($pathToImg);
+            $path = $request->file('avatar')->getPathName();
+            $image = Image::make($path);
             if ($image->height() > $image->width()) {
                 $image->widen(300);
             } else {
                 $image->heighten(300);
             }
             $image->crop(300, 300)->save();
+            $uploadedFileUrl = Cloudinary::upload($path, ['folder' => 'bookstore'])->getSecurePath();
             $user = Auth::user();
             if ($user->img) {
-                Storage::disk('public')->delete($user->img);
+                $url_path = explode('/', 
+                    parse_url($user->img)['path']
+                );
+                cloudinary()->uploadApi()->destroy(
+                    explode(".", 
+                        end($url_path)
+                    )[0]
+                );
             }
-            $user->img = $imgName;
+            $user->img = $uploadedFileUrl;
             $user->save();
-            return response()->json(['success' => true, 'img' => $imgName]);
+            return response()->json(['success' => true, 'img' => $uploadedFileUrl]);
         }
     }
 
