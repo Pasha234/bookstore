@@ -14,6 +14,8 @@ Bookstore is a site made fully on Laravel framework and Vue. The site itself is 
   - "orchid/crud": "^3.1",
   - "orchid/platform": "^10.24"
 
+Site: https://bookstore-online-rus.herokuapp.com/
+
 ## **Russian**
 BookStore — это сайт, полностью созданный на фреймворке Laravel и Vue. Сам сайт является имитацией интернет-магазина по продаже книг. Он имеет функцию авторизации пользователей, где пользователи могут установить свой псевдоним и аватар. Пользователи могут выбирать товары и добавлять их в корзину. Также пользователи могут авторизоваться как под своим логином и паролем, так и под учетной записью Google. На сайте также есть панель администратора, где администратор может манипулировать содержимым сайта.
 ###### Перечнь технологий: Laravel, Vue, MySQL, 
@@ -28,3 +30,5 @@ BookStore — это сайт, полностью созданный на фре
   - "laravel/tinker": "^2.5",
   - "orchid/crud": "^3.1",
   - "orchid/platform": "^10.24"
+
+Сайт: https://bookstore-online-rus.herokuapp.com/
