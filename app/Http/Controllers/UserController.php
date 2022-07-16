@@ -352,10 +352,9 @@ class UserController extends Controller
             $new_user = new User;
             $new_user->name = $request->name;
             $new_user->last_name = $request->last_name;
-            $new_user->email = $request->session()->get('email');
+            $new_user->email = $request->session()->get('email')[0];
             $new_user->password = null;
             $new_user['from_google'] = true;
-            dd([$request->name, $request->last_name, $request->session()->get('email')]);
             $new_user->save();
             $request->session()->forget(['email', 'from_google']);
             if (Auth::attempt($credentials)) {
