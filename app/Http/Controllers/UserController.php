@@ -63,8 +63,6 @@ class UserController extends Controller
                 return redirect('/login')->withErrors([
                     'email' => 'The provided credentials do not match our records'
                 ]);
-                print_r($google_info);
-                return "Здарова, $name, с e-mail: $email";
             } else {
                 return view('user.login', [
                     'google_link' => $client->createAuthUrl()
@@ -252,10 +250,12 @@ class UserController extends Controller
             'password' => ['required']
         ]);
 
-        if (Auth::attempt($credentials)) {
-            $request->session()->regenerate();
-
-            return redirect('/personal');
+        $user = User::firstWhere('email', $request->email);
+        if ($user->from_google == 0) {
+            if (Auth::attempt($credentials)) {
+                $request->session()->regenerate();
+                return redirect('/personal');
+            }
         }
 
         return back()->withErrors([
