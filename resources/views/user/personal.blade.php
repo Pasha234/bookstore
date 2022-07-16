@@ -9,7 +9,7 @@
       @endif
       <div class="card__name"><span class="card__name__text">{{ $user->name }}</span></div>
     </div>
-    <div class="personal__change" @click="showAvatarForm()"><span class="personal__change__text">Сменить аватар</span><input v-if="change_avatar" @change="changeAvatar" accept="image/*" type="file" /></div>
+    <div class="personal__change" @click="showAvatarForm()"><span class="personal__change__text">Сменить аватар</span><div v-if="change_avatar">Фото должно быть меньше 1Мб <input @change="changeAvatar" accept="image/*" type="file" /></div></div>
   </div>
   <div class="personal__quit"><a href="/quit" class="quit__text">Выйти</a></div>
   <div class="personal__orders">
