@@ -319,7 +319,7 @@ class UserController extends Controller
                     parse_url($user->img)['path']
                 );
                 cloudinary()->uploadApi()->destroy(
-                    explode(".", 
+                    "bookstore/" . explode(".", 
                         end($url_path)
                     )[0]
                 );
